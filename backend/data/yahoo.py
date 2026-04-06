@@ -3,7 +3,9 @@
 import json
 import time
 import logging
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 import pandas as pd
 import yfinance as yf
@@ -173,7 +175,7 @@ async def save_fundamentals_to_db(info: dict):
     if not symbol:
         return
 
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(IST).isoformat()
     db = await get_db()
     try:
         await db.execute(

@@ -3,7 +3,9 @@
 import json
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 import pandas as pd
 
@@ -93,7 +95,7 @@ async def compute_conviction(
             "fundamental": fund_details,
             "quantitative": quant_details,
         },
-        "computed_at": datetime.utcnow().isoformat(),
+        "computed_at": datetime.now(IST).isoformat(),
     }
 
 
@@ -223,7 +225,7 @@ async def refresh_all_scores(progress_callback=None) -> dict:
         "scored": len(results),
         "errors": len(errors),
         "error_symbols": errors,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(IST).isoformat(),
     }
     logger.info(f"Refresh complete: {summary}")
     return summary
@@ -254,7 +256,7 @@ async def _get_sector_median_pe(sector: str) -> float | None:
 
 async def _update_sector_scores():
     """Update the sector_scores table with latest aggregates."""
-    today = datetime.utcnow().strftime("%Y-%m-%d")
+    today = datetime.now(IST).strftime("%Y-%m-%d")
     db = await get_db()
     try:
         # Get latest score per stock

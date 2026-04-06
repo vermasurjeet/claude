@@ -1,6 +1,8 @@
 """Stock universe management — Nifty 50/500 constituent lists."""
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 from backend.db.connection import get_db
 
@@ -89,7 +91,7 @@ def get_stock_list() -> list[dict]:
 async def populate_stock_universe():
     """Insert/update stock universe into database."""
     stocks = get_stock_list()
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(IST).isoformat()
 
     db = await get_db()
     try:
