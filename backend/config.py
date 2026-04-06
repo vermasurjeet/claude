@@ -46,6 +46,14 @@ class Settings(BaseSettings):
     REFRESH_HOUR: int = 18  # 6 PM IST
     REFRESH_MINUTE: int = 0
 
+    # Intraday refresh
+    INTRADAY_ENABLED: bool = True
+    INTRADAY_INTERVAL_MINUTES: int = 5  # Refresh every 5 min during market hours
+    MARKET_OPEN_HOUR: int = 9   # IST
+    MARKET_OPEN_MINUTE: int = 15
+    MARKET_CLOSE_HOUR: int = 15  # IST
+    MARKET_CLOSE_MINUTE: int = 30
+
     # API
     CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:3000"]
 

@@ -84,6 +84,8 @@ async def refresh_status():
 @router.get("/health")
 async def health_check():
     """System health check."""
+    from backend.scheduler import is_market_hours
+
     stock_count = await execute_query(
         "SELECT COUNT(*) as cnt FROM stocks WHERE is_active = 1", fetch="one"
     )
@@ -99,6 +101,9 @@ async def health_check():
         "stocks": stock_count["cnt"] if stock_count else 0,
         "scores": score_count["cnt"] if score_count else 0,
         "last_refresh": last_refresh["last"] if last_refresh else None,
+        "market_open": is_market_hours(),
+        "intraday_enabled": settings.INTRADAY_ENABLED,
+        "intraday_interval": settings.INTRADAY_INTERVAL_MINUTES,
     }
 
 
