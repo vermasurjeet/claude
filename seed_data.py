@@ -4,7 +4,9 @@ import asyncio
 import json
 import random
 import math
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 import numpy as np
 import pandas as pd
@@ -106,7 +108,7 @@ async def seed_database():
     print(f"Database initialized, stock universe populated")
 
     db = await get_db()
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(IST).isoformat()
 
     # Generate OHLCV and fundamentals for each stock
     all_ohlcv = {}
@@ -223,7 +225,7 @@ async def seed_database():
     await db.commit()
 
     # Update sector scores
-    today = datetime.utcnow().strftime("%Y-%m-%d")
+    today = datetime.now(IST).strftime("%Y-%m-%d")
     cursor = await db.execute(
         """SELECT s.sector, sc.symbol, sc.total_score
            FROM scores sc JOIN stocks s ON sc.symbol = s.symbol
